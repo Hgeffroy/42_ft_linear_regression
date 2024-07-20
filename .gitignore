@@ -1,2 +1,4 @@
 *.tmp
 .idea/*
+python_venv/*
+__pycache__/*
