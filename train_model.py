@@ -11,7 +11,6 @@ try:
     Mileages = normalize_data(Mileages)
     Prices = normalize_data(Prices)
 except (FileNotFoundError, PermissionError):
-    print('data.csv not found')
     sys.exit(2)
 
 Step0 = 1
@@ -29,7 +28,14 @@ while (abs(Step0) > 0.0001 or abs(Step1) > 0.0001) and Nb_iter < 10000:
     Step0 = ErrorSum0 * learningRate / len(Mileages)
     Step1 = ErrorSum1 * learningRate / len(Mileages)
 
-    update_thetas('assets/variables.tmp', Step0, Step1)
+    try:
+        update_thetas('assets/variables.csv', Step0, Step1)
+    except (ValueError, IndexError, FileNotFoundError, PermissionError):
+        sys.exit(2)
+
     Nb_iter += 1
 
-denormalize_thetas('./assets/data.csv', 'assets/variables.tmp')
+try:
+    denormalize_thetas('./assets/data.csv', 'assets/variables.csv')
+except (ValueError, IndexError, FileNotFoundError, PermissionError):
+    sys.exit(2)

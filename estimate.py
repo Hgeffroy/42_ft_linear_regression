@@ -5,12 +5,12 @@ from utils import get_thetas
 def estimate(mileage):
 
     try:
-        theta0, theta1 = get_thetas('./assets/variables.tmp')
+        theta0, theta1 = get_thetas('assets/variables.csv')
     except (FileNotFoundError, PermissionError):
-        print('variables.tmp not found')
+        print('variables.csv not found')
         sys.exit(2)
     except ValueError:
-        print('variables.tmp is corrupted')
+        print('variables.csv is corrupted')
         sys.exit(1)
 
     estimated_value = theta0 + theta1 * mileage
