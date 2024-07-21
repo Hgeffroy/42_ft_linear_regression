@@ -32,4 +32,4 @@ while (abs(Step0) > 0.0001 or abs(Step1) > 0.0001) and Nb_iter < 10000:
     update_thetas('assets/variables.tmp', Step0, Step1)
     Nb_iter += 1
 
-denormalize_thetas()
+denormalize_thetas('./assets/data.csv', 'assets/variables.tmp')
