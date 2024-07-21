@@ -1,5 +1,5 @@
 import sys
-from file_management import get_thetas
+from utils import get_thetas
 
 
 def estimate(mileage):

@@ -1,6 +1,3 @@
-import os
-
-
 def get_thetas(filename):
     theta0 = None
     theta1 = None
@@ -51,3 +48,12 @@ def update_thetas(filename, step_theta0, step_theta1):
     file.write('Theta1=' + str(theta1 + step_theta1) + '\n')
     file.close()
 
+
+def normalize_data(lst):
+    i = 0
+    lst_max = max(lst)
+    for data in lst:
+        lst[i] = data / lst_max
+        i += 1
+
+    return lst
