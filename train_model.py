@@ -1,5 +1,6 @@
 import sys
-from utils import get_data, update_thetas, normalize_data
+from utils import (get_data, update_thetas, normalize_data,
+                   denormalize_thetas)
 from estimate import estimate
 
 learningRate = 0.02
@@ -17,7 +18,7 @@ Step0 = 1
 Step1 = 1
 Nb_iter = 0
 
-while (abs(Step0) > 0.0001 or abs(Step1) > 0.0001) and Nb_iter < 3000:
+while (abs(Step0) > 0.0001 or abs(Step1) > 0.0001) and Nb_iter < 10000:
     ErrorSum0 = 0
     ErrorSum1 = 0
 
@@ -31,3 +32,4 @@ while (abs(Step0) > 0.0001 or abs(Step1) > 0.0001) and Nb_iter < 3000:
     update_thetas('assets/variables.tmp', Step0, Step1)
     Nb_iter += 1
 
+denormalize_thetas()

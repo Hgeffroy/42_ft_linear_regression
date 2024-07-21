@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from utils import get_data, get_thetas, normalize_data
 
 x, y1 = get_data('./assets/data.csv')
-x = normalize_data(x)
-y1 = normalize_data(y1)
+# x = normalize_data(x)
+# y1 = normalize_data(y1)
 Theta0, Theta1 = get_thetas('./assets/variables.tmp')
 y2 = []
 

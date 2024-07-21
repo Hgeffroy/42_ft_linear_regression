@@ -57,3 +57,15 @@ def normalize_data(lst):
         i += 1
 
     return lst
+
+
+def denormalize_thetas():
+    mileages, prices = get_data('./assets/data.csv')
+    theta0, theta1 = get_thetas('./assets/variables.tmp')
+    max_mileage = max(mileages)
+    max_price = max(prices)
+
+    file = open('./assets/variables.tmp', 'w')
+    file.write('Theta0=' + str(theta0 * max_price) + '\n')
+    file.write('Theta1=' + str(theta1 * max_price / max_mileage) + '\n')
+    file.close()
