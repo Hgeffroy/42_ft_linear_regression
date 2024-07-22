@@ -51,25 +51,3 @@ def update_thetas(filename, step_theta0, step_theta1):
                + str(theta1 + step_theta1) + '\n')
     file.close()
 
-
-def normalize_data(lst):
-    i = 0
-    lst_max = max(lst)
-    for data in lst:
-        lst[i] = data / lst_max
-        i += 1
-
-    return lst
-
-
-def denormalize_thetas(data_file, thetas_file):
-    mileages, prices = get_data(data_file)
-    theta0, theta1 = get_thetas(thetas_file)
-    max_mileage = max(mileages)
-    max_price = max(prices)
-
-    file = open(thetas_file, 'w')
-    file.write('theta0,theta1\n')
-    file.write(str(theta0 * max_price) + ','
-               + str(theta1 * max_price / max_mileage) + '\n')
-    file.close()

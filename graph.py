@@ -1,6 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
-from utils import get_data, get_thetas, normalize_data
+from utils import get_data, get_thetas
 
 x, y1 = get_data('./assets/data.csv')
 try:
