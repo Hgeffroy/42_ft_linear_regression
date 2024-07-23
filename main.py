@@ -5,10 +5,12 @@ from lib.Models import LinearModel
 import argparse
 
 
-def args_error():
-    print('Usage: ./main.py [-h] option')
-    print('Available OPTIONS:\n- evaluate\n- train\n- printdata\n'
-          '- printmodel\n- precision\n')
+def valid_option(opt):
+    valid_values = ['evaluate', 'train', 'reset']
+    if opt in valid_values:
+        return opt
+    else:
+        raise argparse.ArgumentTypeError(f'{opt} is not a valid option')
 
 
 def evaluate(model: LinearModel):
@@ -18,7 +20,18 @@ def evaluate(model: LinearModel):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('option')
+    parser.add_argument('option', type=valid_option,
+                        help='[evaluate] [train] [reset]')
+    parser.add_argument('-s', '--showdata', action='store_true',
+                        help='Show raw datas in a graph')
+    parser.add_argument('-S', '--showmodel', action='store_true',
+                        help='Show model in a graph with the raw data')
+    parser.add_argument('-p', '--precision', action='store_true',
+                        help='Print the r squared of the regression')
+    parser.add_argument('-d', '--printdata', action='store_true',
+                        help='Print the data in the standard output')
+    parser.add_argument('-m', '--printmodel', action='store_true',
+                        help='Print the model in the standard output')
     args = parser.parse_args()
 
     data = BidimensionalData('assets/data.csv')
@@ -29,20 +42,19 @@ def main():
             evaluate(model)
         case 'train':
             model.train(data, 0.1)
-        case 'showdata':
-            data.show(title='Price of cars given their mileage',
-                         x_label='Mileage of car(km)',
-                         y_label='Price of car(euros)')
-        case 'showmodel':
-            model.show(data)
-        case 'printmodel':
-            model.print()
-        case 'precision':
-            print(model.r_squared(data))
-        case 'resetmodel':
+        case 'reset':
             model.reset()
-        case _:
-            return args_error()
+
+    if args.showdata:
+        data.show('Price of the cars given their mileage')
+    if args.showmodel:
+        model.show(data, 'Price of the cars given their mileage')
+    if args.precision:
+        model.r_squared(data)
+    if args.printdata:
+        print(data)
+    if args.printmodel:
+        print(model)
 
 
 if __name__ == '__main__':

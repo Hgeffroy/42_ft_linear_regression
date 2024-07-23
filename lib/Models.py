@@ -1,4 +1,5 @@
 from lib.Datasets import BidimensionalData
+from typing import Tuple
 import matplotlib.pyplot as plt
 import csv
 
@@ -9,20 +10,23 @@ class LinearModel:
     """
 
     def __init__(self, file):
-        self.__intersect = 0
-        self.__slope = 0
-        self.__file = file
+        self._intersect: float = 0
+        self._slope: float = 0
+        self._file: str = file
         try:
             with open(file, newline='') as csvfile:
                 data = csv.reader(csvfile, delimiter=',')
                 data.__next__()
-                tmp = data.__next__()
-                self.__intersect = float(tmp[0])
-                self.__slope = float(tmp[1])
+                values = data.__next__()
+                self._intersect = float(values[0])
+                self._slope = float(values[1])
         except FileNotFoundError:
-            self.__store_model(file)
+            self._store_model(file)
 
-    def __compute_next_step(self, data_x, data_y, learning_rate):
+    def __str__(self):
+        return f'intersect: {self._intersect}\nslope: {self._slope}'
+
+    def _compute_next_step(self, data_x, data_y, learning_rate) -> Tuple[float, float]:
         error_sum_intersect = 0
         error_sum_slope = 0
         for x, y in zip(data_x, data_y):
@@ -34,11 +38,11 @@ class LinearModel:
 
         return step_intersect, step_slope
 
-    def __store_model(self, file):
+    def _store_model(self, file):
         with open(file, 'w', newline='') as csvfile:
             file = csv.writer(csvfile, delimiter=',')
             file.writerow(['intersect'] + ['slope'])
-            file.writerow([self.__intersect, self.__slope])
+            file.writerow([self._intersect, self._slope])
 
     def train(self, dataset: BidimensionalData, learning_rate: float,
               max_iterations: int = 10000, normalized: bool = True):
@@ -56,25 +60,25 @@ class LinearModel:
                 error_sum_slope += (y - self.evaluate(x)) * x
 
             step_intersect, step_slope = (
-                self.__compute_next_step(data_x, data_y, learning_rate))
+                self._compute_next_step(data_x, data_y, learning_rate))
 
-            if abs(step_intersect) < 0.0000001 and abs(step_slope) < 0.0000001:
+            if abs(step_intersect) < 1e-6 and abs(step_slope) < 1e-6:
                 break
 
-            self.__intersect += step_intersect
-            self.__slope += step_slope
+            self._intersect += step_intersect
+            self._slope += step_slope
 
         if normalized is True:
-            norm_x, norm_y = dataset.get_normalization_values()
-            self.__intersect *= norm_y
-            self.__slope *= norm_y / norm_x
+            norm_x, norm_y = dataset.get_max_values()
+            self._intersect *= norm_y
+            self._slope *= norm_y / norm_x
 
-        self.__store_model(self.__file)
+        self._store_model(self._file)
 
-    def evaluate(self, to_evaluate: float):
-        return self.__intersect + self.__slope * to_evaluate
+    def evaluate(self, to_evaluate: float) -> float:
+        return self._intersect + self._slope * to_evaluate
 
-    def r_squared(self, dataset: BidimensionalData):
+    def r_squared(self, dataset: BidimensionalData) -> float:
         data_x, data_y = dataset.get_data()
 
         mean = sum(data_y) / len(data_y)
@@ -95,11 +99,7 @@ class LinearModel:
         plt.ylabel(y_label)
         plt.show()
 
-    def print(self):
-        print(f'intersect: {self.__intersect}')
-        print(f'slope: {self.__slope}')
-
     def reset(self):
-        self.__intersect = 0
-        self.__slope = 0
-        self.__store_model(self.__file)
+        self._intersect = 0
+        self._slope = 0
+        self._store_model(self._file)
