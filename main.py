@@ -6,7 +6,7 @@ import argparse
 
 
 def valid_option(opt):
-    valid_values = ['evaluate', 'train', 'reset']
+    valid_values = ['evaluate', 'train', 'reset', 'show']
     if opt in valid_values:
         return opt
     else:
@@ -44,6 +44,8 @@ def main():
             model.train(data, 0.1)
         case 'reset':
             model.reset()
+        case 'show':
+            pass
 
     if args.showdata:
         data.show('Price of the cars given their mileage')
