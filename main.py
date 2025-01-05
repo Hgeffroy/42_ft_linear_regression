@@ -6,7 +6,7 @@ import argparse
 
 
 def valid_option(opt):
-    valid_values = ['evaluate', 'train', 'reset', 'show']
+    valid_values = ['evaluate', 'train', 'reset', 'show', 'compare']
     if opt in valid_values:
         return opt
     else:
@@ -38,10 +38,12 @@ def main():
     model = LinearModel('assets/model.csv')
 
     match args.option:
+        case 'compare':
+            model.compare_several_training_options(data)
         case 'evaluate':
             evaluate(model)
         case 'train':
-            model.train(data, 0.1)
+            model.train(data)
         case 'reset':
             model.reset()
         case 'show':
@@ -52,11 +54,12 @@ def main():
     if args.showmodel:
         model.show(data, 'Price of the cars given their mileage')
     if args.precision:
-        model.r_squared(data)
+        print(model.r_squared(data))
     if args.printdata:
         print(data)
     if args.printmodel:
         print(model)
+
 
 
 if __name__ == '__main__':

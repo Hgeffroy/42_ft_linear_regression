@@ -44,8 +44,9 @@ class LinearModel:
             file.writerow(['intersect'] + ['slope'])
             file.writerow([self._intersect, self._slope])
 
-    def train(self, dataset: BidimensionalData, learning_rate: float,
-              max_iterations: int = 10000, normalized: bool = True):
+    def train(self, dataset: BidimensionalData, learning_rate: float = 0.1,
+              max_iterations: int = 10000, normalized: bool = True,
+              precision: float = 1e-6):
 
         if normalized is True:
             data_x, data_y = dataset.get_normalized_data()
@@ -62,7 +63,8 @@ class LinearModel:
             step_intersect, step_slope = (
                 self._compute_next_step(data_x, data_y, learning_rate))
 
-            if abs(step_intersect) < 1e-6 and abs(step_slope) < 1e-6:
+            if (abs(step_intersect) < precision and
+                    abs(step_slope) < precision):
                 break
 
             self._intersect += step_intersect
@@ -103,3 +105,41 @@ class LinearModel:
         self._intersect = 0
         self._slope = 0
         self._store_model(self._file)
+
+    def compare_several_training_options(self, dataset: BidimensionalData,
+                                         precisions_to_test=None,
+                                         max_iterations_to_test=None):
+        if precisions_to_test is None:
+            precisions_to_test = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7]
+        if max_iterations_to_test is None:
+            max_iterations_to_test = [10, 100, 1000, 10000, 100000]
+
+        self.reset()
+        r_squared_precisions = []
+        r_squared_max_iterations = []
+
+        for precision in precisions_to_test:
+            self.train(dataset, precision=precision)
+            r_squared_precisions.append(self.r_squared(dataset))
+            self.reset()
+
+        for max_iteration in max_iterations_to_test:
+            self.train(dataset, max_iterations=max_iteration)
+            r_squared_max_iterations.append(self.r_squared(dataset))
+            self.reset()
+
+        plt.plot(max_iterations_to_test, r_squared_max_iterations)
+        plt.title("Precision of regression given number of max iterations")
+        plt.xscale('log')
+        plt.xlabel("Max iterations")
+        plt.ylabel("R-squared")
+        plt.show()
+
+        plt.plot(precisions_to_test, r_squared_precisions)
+        plt.title("Precision of regression given precision")
+        plt.xscale('log')
+        plt.xlabel("Max iterations")
+        plt.ylabel("R-squared")
+        plt.show()
+
+

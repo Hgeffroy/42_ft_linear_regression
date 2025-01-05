@@ -6,7 +6,7 @@ from lib.Datasets import BidimensionalData
 def main():
     model = LinearModel('assets/model.csv')
     data = BidimensionalData('assets/data.csv')
-    model.train(data, 0.1)
+    model.train(data)
 
 
 if __name__ == '__main__':
