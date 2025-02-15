@@ -54,12 +54,6 @@ class LinearModel:
             data_x, data_y = dataset.get_data()
 
         for i in range(max_iterations):
-            error_sum_intersect = 0
-            error_sum_slope = 0
-            for x, y in zip(data_x, data_y):
-                error_sum_intersect += y - self.evaluate(x)
-                error_sum_slope += (y - self.evaluate(x)) * x
-
             step_intersect, step_slope = (
                 self._compute_next_step(data_x, data_y, learning_rate))
 
